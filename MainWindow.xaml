@@ -220,6 +220,7 @@
             <Label>IWAD</Label>
             <ComboBox Name="iwad_select" Text="" IsReadOnly="true"/>
             <Button Click="StartGame" Style="{StaticResource StartButton}">START</Button>
+            <Label HorizontalAlignment="Right" Margin="0 12 0 0" Foreground="LightGray">By L.ptt</Label>
         </StackPanel>
     </Grid>
 </Window>
