@@ -1,0 +1,49 @@
+﻿<Window x:Class="DoomLoader.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DoomLoader"
+        mc:Ignorable="d"
+        Title="TrzDoomLauncher" Height="600" Width="800" MinHeight="450" MinWidth="500">
+    <FrameworkElement.Resources>
+        <!--DirectoryTreeViewModel x:Key="DirectoryTreeViewModel"/-->
+    </FrameworkElement.Resources>
+    <!--Grid DataContext="{DynamicResource DirectoryTreeViewModel}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="200"/>
+        </Grid.ColumnDefinitions>
+        <local:MultiselectTreeview x:Name="pwad_select" ScrollViewer.VerticalScrollBarVisibility="Visible" Grid.RowSpan="2"
+                               ItemContainerStyle="{StaticResource MultiselectTreeviewItemStyle}" ItemsSource="{Binding Tree}">
+            <ItemsControl.ItemTemplate>
+                <HierarchicalDataTemplate ItemsSource="{Binding Children}">
+                    <Grid>
+                        <TextBlock FontSize="14" Text="{Binding path}"/>
+                    </Grid>
+                </HierarchicalDataTemplate>
+            </ItemsControl.ItemTemplate>
+        </local:MultiselectTreeview>
+        <StackPanel Grid.Row="0" Grid.Column="1" Margin="10 15 10 0">
+            <Button Click="AddPort" Style="{StaticResource AddPortButton}">➕ Add Port</Button>
+            <Label>PWAD Directory</Label>
+            <StackPanel Style="{StaticResource DirectoryBox}">
+                <TextBox Name="pwad_text" Width="140" IsEnabled="False">
+                </TextBox>
+                <Button Click="EditPWADDir" Style="{StaticResource EditButton}">Edit</Button>
+            </StackPanel>
+        </StackPanel>
+        <StackPanel Grid.Row="1" Grid.Column="1" Margin="10 0 10 0">
+            <Label>Doom Port</Label>
+            <ComboBox Name="port_select" Text="" IsReadOnly="true"/>
+            <Label>IWAD</Label>
+            <ComboBox Name="iwad_select" Text="" IsReadOnly="true"/>
+            <Button Click="StartGame" Style="{StaticResource StartButton}">START</Button>
+        </StackPanel>
+    </Grid-->
+
+</Window>
