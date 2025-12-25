@@ -1,13 +1,11 @@
 ﻿using System;
-using System.CodeDom.Compiler;
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Text;
 using System.Windows;
 using System.Windows.Forms;
-using System.Windows.Markup;
 
 namespace DoomLoader
 {
@@ -32,10 +30,10 @@ namespace DoomLoader
             InitializeComponent();
             if (!config.check_integrity())
             {
-                System.Windows.MessageBox.Show("You need to set directories for IWADs, PWADs and the path for at least one doom port");
+                System.Windows.MessageBox.Show("You need to set directories for PWADs and the path for at least one doom port");
             }
             ports = new Dictionary<string, string>();
-            ReloadPWads();
+            ReloadConfig();
         }
 
         private void StartGame(object sender, RoutedEventArgs e)
@@ -68,7 +66,7 @@ namespace DoomLoader
             });
             Directory.SetCurrentDirectory(currentDirectory);
         }
-        private void ReloadPWads()
+        private void ReloadConfig()
         {
             ports.Clear();
             config.ports.ForEach(p => ports.Add(Path.GetFileNameWithoutExtension(p), p));
@@ -77,6 +75,10 @@ namespace DoomLoader
             port_select.SelectedIndex = 0;
             iwad_select.ItemsSource = iwads;
             iwad_select.SelectedIndex = 0;
+        }
+        private void ReloadPWads(object sender, RoutedEventArgs e)
+        {
+            Resources["DirectoryTreeViewModel"] = new DirectoryTreeViewModel();
         }
 
         private void AddPort(object sender, RoutedEventArgs e)
@@ -89,7 +91,7 @@ namespace DoomLoader
             }
             config.ports.Add(openFileDialog.FileName);
             config.save();
-            ReloadPWads();
+            ReloadConfig();
         }
 
         private void EditIWADDir(object sender, RoutedEventArgs e)
@@ -99,7 +101,7 @@ namespace DoomLoader
                 return;
             System.Windows.MessageBox.Show(folderBrowserDialog.SelectedPath);
             config.save();
-            ReloadPWads();
+            ReloadConfig();
         }
 
         private void EditPWADDir(object sender, RoutedEventArgs e)
@@ -110,7 +112,17 @@ namespace DoomLoader
             System.Windows.MessageBox.Show(folderBrowserDialog.SelectedPath);
             config.pwad_dir = folderBrowserDialog.SelectedPath;
             config.save();
-            ReloadPWads();
+            ReloadConfig();
         }
-    }
+
+        private void UpdateSelectedList(object sender, RoutedEventArgs e)
+        {
+            StringBuilder builder = new StringBuilder();
+            
+            foreach (DirectoryTree element in pwad_select.SelectedItems)
+                builder.AppendLine(element.path);
+
+            selected_items.Content = builder.ToString();
+        }
+    }   
 }

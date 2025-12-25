@@ -99,6 +99,8 @@
             </Setter>
         </Style>
         <Style x:Key="MultiselectTreeviewItemStyle" TargetType="{x:Type TreeViewItem}">
+            <EventSetter Event="Selected" Handler="UpdateSelectedList" />
+            <EventSetter Event="Unselected" Handler="UpdateSelectedList" />
             <Setter Property="Control.Background" Value="Transparent"/>
             <Setter Property="TreeViewItem.IsExpanded" Value="True"/>
             <Setter Property="Control.HorizontalContentAlignment"
@@ -106,6 +108,8 @@
             <Setter Property="Control.VerticalContentAlignment"
               Value="{Binding VerticalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
             <Setter Property="Control.Padding" Value="1,0,0,0"/>
+            <Setter Property="Control.Foreground"
+              Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
             <Setter Property="FrameworkElement.FocusVisualStyle" Value="{StaticResource TreeViewItemFocusVisual}"/>
             <Setter Property="Control.Template">
                 <Setter.Value>
@@ -139,11 +143,34 @@
                             <Trigger Property="ItemsControl.HasItems" Value="false">
                                 <Setter TargetName="Expander" Property="UIElement.Visibility" Value="Hidden"/>
                             </Trigger>
+                            <Trigger Property="local:MultiselectTreeview.IsItemSelected" Value="true">
+                                <Setter TargetName="Bd" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"
+                        Property="Border.Background"/>
+                                <Setter Value="{DynamicResource {x:Static SystemColors.HighlightTextBrushKey}}"
+                        Property="Control.Foreground"/>
+                            </Trigger>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="local:MultiselectTreeview.IsItemSelected" Value="true"/>
+                                    <Condition Property="TreeViewItem.IsSelectionActive" Value="false"/>
+                                </MultiTrigger.Conditions>
+                                <Setter TargetName="Bd"
+                        Value="{DynamicResource {x:Static SystemColors.InactiveSelectionHighlightBrushKey}}"
+                        Property="Border.Background"/>
+                                <Setter Value="{DynamicResource {x:Static SystemColors.InactiveSelectionHighlightTextBrushKey}}"
+                        Property="Control.Foreground"/>
+                            </MultiTrigger>
+                            <Trigger Property="UIElement.IsEnabled" Value="false">
+                                <Setter Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" Property="Control.Foreground"/>
+                            </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
             <Style.Triggers>
+                <Trigger Property="HasItems" Value="True">
+                    <Setter Property="Focusable" Value="False" />
+                </Trigger>
                 <Trigger Property="VirtualizingPanel.IsVirtualizing" Value="true">
                     <Setter Property="ItemsControl.ItemsPanel">
                         <Setter.Value>
@@ -159,7 +186,7 @@
     <Grid DataContext="{DynamicResource DirectoryTreeViewModel}">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="200"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -177,12 +204,15 @@
         </local:MultiselectTreeview>
         <StackPanel Grid.Row="0" Grid.Column="1" Margin="10 15 10 0">
             <Button Click="AddPort" Style="{StaticResource AddPortButton}">➕ Add Port</Button>
-            <Label>PWAD Directory</Label>
+            <Label FontWeight="DemiBold">PWAD Directory</Label>
             <StackPanel Style="{StaticResource DirectoryBox}">
-                <TextBox Name="pwad_text" Width="140" IsEnabled="False">
+                <TextBox Name="pwad_text" Width="147" IsEnabled="False">
                 </TextBox>
                 <Button Click="EditPWADDir" Style="{StaticResource EditButton}">Edit</Button>
             </StackPanel>
+            <Button Click="ReloadPWads">Refresh</Button>
+            <Label FontWeight="DemiBold">Selected:</Label>
+            <Label Name="selected_items" Margin="10 0 0 0" />
         </StackPanel>
         <StackPanel Grid.Row="1" Grid.Column="1" Margin="10 0 10 0">
             <Label>Doom Port</Label>

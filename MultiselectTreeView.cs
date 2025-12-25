@@ -2,8 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -17,7 +15,7 @@ namespace DoomLoader
         private TreeViewItem _lastItemSelected;
         public static readonly DependencyProperty IsItemSelectedProperty = DependencyProperty.RegisterAttached("IsItemSelected", typeof(bool), typeof(MultiselectTreeview));
 
-        public static void SetIsItemSelected(UIElement element, bool value) => element.SetValue(IsItemSelectedProperty, (object)value);
+        public static void SetIsItemSelected(UIElement element, bool value) => element.SetValue(IsItemSelectedProperty, value);
 
         public static bool GetIsItemSelected(UIElement element) => (bool)element.GetValue(IsItemSelectedProperty);
 

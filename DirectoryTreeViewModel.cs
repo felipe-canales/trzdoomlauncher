@@ -1,24 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DoomLoader
 {
     public sealed class DirectoryTreeViewModel
     {
+        private List<string> ACCEPTED_EXTENSIONS = new List<string> { ".pk3", ".wad" };
+
         public ObservableCollection<DirectoryTree> Tree { get; set; }
 
         public DirectoryTreeViewModel()
         {
             Configuration configuration = new Configuration();
             if (!string.IsNullOrEmpty(configuration.pwad_dir))
-                this.Tree = this.PopulateTree(configuration.pwad_dir).Children;
+                Tree = PopulateTree(configuration.pwad_dir).Children;
             else
-                this.Tree = new ObservableCollection<DirectoryTree>();
+                Tree = new ObservableCollection<DirectoryTree>();
         }
 
         public DirectoryTree PopulateTree(string path, DirectoryTree? parent = null)
@@ -27,12 +25,15 @@ namespace DoomLoader
             parent1.path = Path.GetFileName(path);
             parent1.Children = new ObservableCollection<DirectoryTree>();
             parent1.parent = parent;
-            if (File.GetAttributes(path).HasFlag((Enum)FileAttributes.Directory))
+            if (File.GetAttributes(path).HasFlag(FileAttributes.Directory))
             {
                 foreach (string directory in Directory.GetDirectories(path))
-                    parent1.Children.Add(this.PopulateTree(directory, parent1));
+                    parent1.Children.Add(PopulateTree(directory, parent1));
                 foreach (string file in Directory.GetFiles(path))
-                    parent1.Children.Add(this.PopulateTree(file, parent1));
+                {
+                    if (ACCEPTED_EXTENSIONS.Contains(Path.GetExtension(file).ToLower()))
+                        parent1.Children.Add(PopulateTree(file, parent1));
+                }
             }
             return parent1;
         }
