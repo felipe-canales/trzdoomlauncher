@@ -13,7 +13,7 @@ namespace DoomLoader
 {
     public partial class MainWindow : Window
     {
-        /*private Configuration config = new Configuration();
+        private Configuration config = new Configuration();
         private List<string> iwads = new List<string>()
         {
             "doom.wad",
@@ -27,10 +27,6 @@ namespace DoomLoader
             "tnt.wad"
         };
         private Dictionary<string, string> ports;
-        internal MultiselectTreeView pwad_select;
-        internal System.Windows.Controls.TextBox pwad_text;
-        internal System.Windows.Controls.ComboBox port_select;
-        internal System.Windows.Controls.ComboBox iwad_select;
         public MainWindow()
         {
             InitializeComponent();
@@ -115,6 +111,6 @@ namespace DoomLoader
             config.pwad_dir = folderBrowserDialog.SelectedPath;
             config.save();
             ReloadPWads();
-        }*/
+        }
     }
 }

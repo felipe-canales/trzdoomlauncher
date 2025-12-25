@@ -7,9 +7,156 @@
         mc:Ignorable="d"
         Title="TrzDoomLauncher" Height="600" Width="800" MinHeight="450" MinWidth="500">
     <FrameworkElement.Resources>
-        <!--DirectoryTreeViewModel x:Key="DirectoryTreeViewModel"/-->
+        <local:DirectoryTreeViewModel x:Key="DirectoryTreeViewModel"/>
+        <Style x:Key="DirectoryBox" TargetType="{x:Type StackPanel}">
+            <Setter Property="StackPanel.Orientation" Value="Horizontal"/>
+            <Setter Property="FrameworkElement.Margin" Value="0 5"/>
+        </Style>
+        <Style x:Key="EditButton" TargetType="{x:Type Button}">
+            <Setter Property="Control.Padding" Value="5 2"/>
+        </Style>
+        <Style x:Key="AddPortButton" TargetType="{x:Type Button}">
+            <Setter Property="FrameworkElement.Height" Value="30"/>
+            <Setter Property="FrameworkElement.Width" Value="100"/>
+            <Setter Property="FrameworkElement.Margin" Value="0 0 0 5"/>
+        </Style>
+        <Style x:Key="StartButton" TargetType="{x:Type Button}">
+            <Setter Property="FrameworkElement.Height" Value="40"/>
+            <Setter Property="FrameworkElement.Width" Value="100"/>
+            <Setter Property="FrameworkElement.Margin" Value="0 30 0 0"/>
+            <Setter Property="Control.FontFamily" Value="Verdana"/>
+            <Setter Property="Control.FontSize" Value="20"/>
+            <Setter Property="Control.FontWeight" Value="Bold"/>
+            <Setter Property="Control.Foreground" Value="#FFF"/>
+            <Setter Property="Control.Background" Value="#393"/>
+            <Setter Property="Control.BorderBrush" Value="#000F"/>
+        </Style>
+        <Style x:Key="TreeViewItemFocusVisual">
+            <Setter Property="Control.Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Rectangle/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <SolidColorBrush x:Key="TreeViewItem.TreeArrow.Static.Checked.Fill" Color="#FF595959"/>
+        <SolidColorBrush x:Key="TreeViewItem.TreeArrow.Static.Checked.Stroke" Color="#FF262626"/>
+        <SolidColorBrush x:Key="TreeViewItem.TreeArrow.MouseOver.Stroke" Color="#FF1BBBFA"/>
+        <SolidColorBrush x:Key="TreeViewItem.TreeArrow.MouseOver.Fill" Color="Transparent"/>
+        <SolidColorBrush x:Key="TreeViewItem.TreeArrow.MouseOver.Checked.Stroke" Color="#FF262626"/>
+        <SolidColorBrush x:Key="TreeViewItem.TreeArrow.MouseOver.Checked.Fill" Color="#FF595959"/>
+        <PathGeometry x:Key="TreeArrow" Figures="M0,0 L0,6 L6,0 z"/>
+        <SolidColorBrush x:Key="TreeViewItem.TreeArrow.Static.Fill" Color="Transparent"/>
+        <SolidColorBrush x:Key="TreeViewItem.TreeArrow.Static.Stroke" Color="#FF989898"/>
+        <Style x:Key="ExpandCollapseToggleStyle" TargetType="{x:Type ToggleButton}">
+            <Setter Property="UIElement.Focusable" Value="False"/>
+            <Setter Property="FrameworkElement.Width" Value="16"/>
+            <Setter Property="FrameworkElement.Height" Value="16"/>
+            <Setter Property="Control.Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ToggleButton}">
+                        <Border Background="Transparent" Height="16" Padding="5,5,5,5" Width="16">
+                            <Path x:Name="ExpandPath" Data="{StaticResource TreeArrow}"
+                    Fill="{StaticResource TreeViewItem.TreeArrow.Static.Fill}"
+                    Stroke="{StaticResource TreeViewItem.TreeArrow.Static.Stroke}">
+                                <UIElement.RenderTransform>
+                                    <RotateTransform Angle="135" CenterY="3" CenterX="3"/>
+                                </UIElement.RenderTransform>
+                            </Path>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="ToggleButton.IsChecked" Value="True">
+                                <Setter TargetName="ExpandPath" Property="UIElement.RenderTransform">
+                                    <Setter.Value>
+                                        <RotateTransform Angle="180" CenterY="3" CenterX="3"/>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter TargetName="ExpandPath" Value="{StaticResource TreeViewItem.TreeArrow.Static.Checked.Fill}"
+                        Property="Shape.Fill"/>
+                                <Setter TargetName="ExpandPath" Value="{StaticResource TreeViewItem.TreeArrow.Static.Checked.Stroke}"
+                        Property="Shape.Stroke"/>
+                            </Trigger>
+                            <Trigger Property="UIElement.IsMouseOver" Value="True">
+                                <Setter TargetName="ExpandPath" Value="{StaticResource TreeViewItem.TreeArrow.MouseOver.Stroke}"
+                        Property="Shape.Stroke"/>
+                                <Setter TargetName="ExpandPath" Value="{StaticResource TreeViewItem.TreeArrow.MouseOver.Fill}"
+                        Property="Shape.Fill"/>
+                            </Trigger>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="UIElement.IsMouseOver" Value="True"/>
+                                    <Condition Property="ToggleButton.IsChecked" Value="True"/>
+                                </MultiTrigger.Conditions>
+                                <Setter TargetName="ExpandPath" Value="{StaticResource TreeViewItem.TreeArrow.MouseOver.Checked.Stroke}"
+                        Property="Shape.Stroke"/>
+                                <Setter TargetName="ExpandPath" Value="{StaticResource TreeViewItem.TreeArrow.MouseOver.Checked.Fill}"
+                        Property="Shape.Fill"/>
+                            </MultiTrigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="MultiselectTreeviewItemStyle" TargetType="{x:Type TreeViewItem}">
+            <Setter Property="Control.Background" Value="Transparent"/>
+            <Setter Property="TreeViewItem.IsExpanded" Value="True"/>
+            <Setter Property="Control.HorizontalContentAlignment"
+              Value="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
+            <Setter Property="Control.VerticalContentAlignment"
+              Value="{Binding VerticalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
+            <Setter Property="Control.Padding" Value="1,0,0,0"/>
+            <Setter Property="FrameworkElement.FocusVisualStyle" Value="{StaticResource TreeViewItemFocusVisual}"/>
+            <Setter Property="Control.Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TreeViewItem}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition MinWidth="19" Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <ToggleButton x:Name="Expander" ClickMode="Press" Style="{StaticResource ExpandCollapseToggleStyle}"
+                            IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}}"/>
+                            <Border x:Name="Bd" BorderBrush="{TemplateBinding Control.BorderBrush}"
+                      BorderThickness="{TemplateBinding Control.BorderThickness}"
+                      Background="{TemplateBinding Control.Background}" Grid.Column="1"
+                      Padding="{TemplateBinding Control.Padding}" SnapsToDevicePixels="true">
+                                <ContentPresenter x:Name="PART_Header" ContentSource="Header"
+                                  HorizontalAlignment="{TemplateBinding Control.HorizontalContentAlignment}"
+                                  SnapsToDevicePixels="{TemplateBinding UIElement.SnapsToDevicePixels}"/>
+                            </Border>
+                            <ItemsPresenter x:Name="ItemsHost" Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="1"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="TreeViewItem.IsExpanded" Value="false">
+                                <Setter TargetName="ItemsHost" Property="UIElement.Visibility" Value="Collapsed"/>
+                            </Trigger>
+                            <Trigger Property="ItemsControl.HasItems" Value="false">
+                                <Setter TargetName="Expander" Property="UIElement.Visibility" Value="Hidden"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="VirtualizingPanel.IsVirtualizing" Value="true">
+                    <Setter Property="ItemsControl.ItemsPanel">
+                        <Setter.Value>
+                            <ItemsPanelTemplate>
+                                <VirtualizingStackPanel/>
+                            </ItemsPanelTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
     </FrameworkElement.Resources>
-    <!--Grid DataContext="{DynamicResource DirectoryTreeViewModel}">
+    <Grid DataContext="{DynamicResource DirectoryTreeViewModel}">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
@@ -44,6 +191,5 @@
             <ComboBox Name="iwad_select" Text="" IsReadOnly="true"/>
             <Button Click="StartGame" Style="{StaticResource StartButton}">START</Button>
         </StackPanel>
-    </Grid-->
-
+    </Grid>
 </Window>
