@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DoomLoader"
         mc:Ignorable="d"
-        Title="TrzDoomLauncher" Height="600" Width="800" MinHeight="450" MinWidth="500">
+        Title="TrzDoomLauncher" Icon="trollian.ico" Height="600" Width="800" MinHeight="450" MinWidth="500">
     <FrameworkElement.Resources>
         <local:DirectoryTreeViewModel x:Key="DirectoryTreeViewModel"/>
         <Style x:Key="DirectoryBox" TargetType="{x:Type StackPanel}">

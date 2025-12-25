@@ -6,6 +6,11 @@
 	<UseWindowsForms>true</UseWindowsForms>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>trollian.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Resource Include="trollian.ico" />
+  </ItemGroup>
 
 </Project>
